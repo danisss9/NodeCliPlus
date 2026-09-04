@@ -2,6 +2,7 @@
   "name": "node-cli-plus",
   "displayName": "Node CLI Plus",
   "description": "npm script runner, debugger, and project tools for Node.js projects in VS Code with AI-powered auto-fix support (GitHub Copilot & Claude Code)",
+  "icon": "assets/icon.png",
   "repository": "https://github.com/danisss9/NodeCliPlus",
   "publisher": "danisss9",
   "version": "0.1.0",
