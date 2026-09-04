@@ -1,0 +1,334 @@
+{
+  "name": "node-cli-plus",
+  "displayName": "Node CLI Plus",
+  "description": "npm script runner, debugger, and project tools for Node.js projects in VS Code with AI-powered auto-fix support (GitHub Copilot & Claude Code)",
+  "repository": "https://github.com/danisss9/NodeCliPlus",
+  "publisher": "danisss9",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.107.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "recommendations": [
+    "github.copilot",
+    "anthropic.claude-code"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "node-cli-plus.debugNode",
+        "title": "Node: Debug Application",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.debugBuildWatch",
+        "title": "Node: Debug Build (Watch)",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.serveNode",
+        "title": "Node: Serve Application",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.restartNodeServe",
+        "title": "Node: Restart Serve",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.buildNode",
+        "title": "Node: Build Project",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.buildNodeWatch",
+        "title": "Node: Build Project (Watch)",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.testNode",
+        "title": "Node: Test Project",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.lintNode",
+        "title": "Node: Lint Project",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.updatePackages",
+        "title": "Node: Update Packages",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.switchFile",
+        "title": "Node: Switch Source/Test File",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.runNpmScript",
+        "title": "Node: Run npm Script",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.checkMemoryLeaks",
+        "title": "Node: Check Memory Leaks",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.checkBuildErrors",
+        "title": "Node: Check Build Errors",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.setupNpmrc",
+        "title": "Node: Setup .npmrc Auth Tokens",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.manageJsonConfig",
+        "title": "Node: Manage JSON Configs",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.npmInstall",
+        "title": "npm: Install",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.npmCleanInstall",
+        "title": "npm: Clean Install",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.checkDependencies",
+        "title": "Check Dependencies",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.checkToolVersions",
+        "title": "Check Tool Versions",
+        "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.clearTerminals",
+        "title": "Close Terminals",
+        "category": "Node CLI Plus"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "node-cli-plus.debugNode",
+        "key": "ctrl+shift+n d"
+      },
+      {
+        "command": "node-cli-plus.debugBuildWatch",
+        "key": "ctrl+shift+n h"
+      },
+      {
+        "command": "node-cli-plus.serveNode",
+        "key": "ctrl+shift+n s"
+      },
+      {
+        "command": "node-cli-plus.restartNodeServe",
+        "key": "ctrl+shift+n r"
+      },
+      {
+        "command": "node-cli-plus.buildNode",
+        "key": "ctrl+shift+n b"
+      },
+      {
+        "command": "node-cli-plus.buildNodeWatch",
+        "key": "ctrl+shift+n w"
+      },
+      {
+        "command": "node-cli-plus.testNode",
+        "key": "ctrl+shift+n t"
+      },
+      {
+        "command": "node-cli-plus.lintNode",
+        "key": "ctrl+shift+n l"
+      },
+      {
+        "command": "node-cli-plus.updatePackages",
+        "key": "ctrl+shift+n u"
+      },
+      {
+        "command": "node-cli-plus.clearTerminals",
+        "key": "ctrl+shift+n c"
+      },
+      {
+        "command": "node-cli-plus.switchFile",
+        "key": "ctrl+shift+n tab"
+      },
+      {
+        "command": "node-cli-plus.runNpmScript",
+        "key": "ctrl+shift+n n"
+      },
+      {
+        "command": "node-cli-plus.checkMemoryLeaks",
+        "key": "ctrl+shift+n k"
+      },
+      {
+        "command": "node-cli-plus.setupNpmrc",
+        "key": "ctrl+shift+n a"
+      },
+      {
+        "command": "node-cli-plus.checkBuildErrors",
+        "key": "ctrl+shift+n e"
+      },
+      {
+        "command": "node-cli-plus.manageJsonConfig",
+        "key": "ctrl+shift+n j"
+      }
+    ],
+    "configuration": {
+      "title": "Node CLI Plus",
+      "properties": {
+        "nodeCliPlus.debug.mode": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "browser",
+            "node"
+          ],
+          "enumDescriptions": [
+            "Detect automatically: attach the browser debugger when the project depends on a web-server framework (express, fastify, nest, vite, ...), otherwise launch the Node.js inspector",
+            "Always run the dev script in a terminal, wait for the port, and attach the browser debugger",
+            "Always launch the script under the VS Code Node.js debugger (runtimeExecutable: npm)"
+          ],
+          "description": "How Node: Debug Application starts debugging"
+        },
+        "nodeCliPlus.debug.browser": {
+          "type": "string",
+          "default": "chrome",
+          "enum": [
+            "chrome",
+            "edge",
+            "brave",
+            "opera",
+            "opera-gx",
+            "firefox",
+            "safari"
+          ],
+          "enumDescriptions": [
+            "Launch Google Chrome for debugging",
+            "Launch Microsoft Edge for debugging",
+            "Launch Brave browser for debugging (Chromium-based)",
+            "Launch Opera for debugging (Chromium-based)",
+            "Launch Opera GX for debugging (Chromium-based)",
+            "Launch Firefox for debugging (requires the 'Debugger for Firefox' VS Code extension)",
+            "Launch Safari for debugging — macOS only (requires the 'Safari Debugger' VS Code extension)"
+          ],
+          "description": "Browser to use when launching a browser debug session"
+        },
+        "nodeCliPlus.debug.browserExecutablePath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional path to the browser executable. Overrides automatic detection. Useful for custom browser installs or browsers not in the standard location."
+        },
+        "nodeCliPlus.debug.port": {
+          "type": "number",
+          "default": 3000,
+          "description": "Port the dev server listens on when debugging in browser mode. Used when the port cannot be detected from the npm script (PORT=..., --port ...)."
+        },
+        "nodeCliPlus.buildWatch.outDir": {
+          "type": "string",
+          "default": "dist",
+          "description": "Directory (relative to the project) served by the static file server when debugging a build watch session."
+        },
+        "nodeCliPlus.buildWatch.servePort": {
+          "type": "number",
+          "default": 4173,
+          "description": "Port the static file server listens on when debugging a build watch session."
+        },
+        "nodeCliPlus.buildWatch.staticServerCommand": {
+          "type": "string",
+          "default": "npx serve {outDir} -l {port}",
+          "description": "Command used to serve the build output during a debug build watch session. Use {outDir} and {port} as placeholders."
+        },
+        "nodeCliPlus.test.watch": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prefer watch-style test scripts (test:watch, test -- --watch) when running Node: Test Project."
+        },
+        "nodeCliPlus.checkDependencies.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check if npm dependencies are installed and match package.json when VS Code opens or when the git branch changes"
+        },
+        "nodeCliPlus.checkToolVersions.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check if Node.js, npm, yarn and pnpm versions satisfy the engines field in the workspace package.json on startup"
+        },
+        "nodeCliPlus.npm.installCommand": {
+          "type": "string",
+          "default": "",
+          "description": "Custom command to run for npm: Install (e.g. 'yarn install' or 'pnpm install'). Leave empty to use the default 'npm install'."
+        },
+        "nodeCliPlus.npm.cleanInstallCommand": {
+          "type": "string",
+          "default": "",
+          "description": "Custom command to run for npm: Clean Install (e.g. 'yarn install --frozen-lockfile'). Leave empty to use the default behaviour (remove node_modules + package-lock.json, then run npm install)."
+        },
+        "nodeCliPlus.ai.provider": {
+          "type": "string",
+          "default": "copilot",
+          "enum": [
+            "copilot",
+            "claude"
+          ],
+          "enumDescriptions": [
+            "Use GitHub Copilot for AI-powered fixes",
+            "Use Claude Code for AI-powered fixes"
+          ],
+          "description": "Choose which AI assistant to use for auto-fix functionality. GitHub Copilot uses 'workbench.action.chat.open', Claude Code uses 'claude-vscode.editor.open'."
+        },
+        "nodeCliPlus.ai.autoFixEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show 'Auto Fix' buttons in the Memory Leaks and Build Errors webviews. Requires the selected AI assistant to be installed."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/semver": "^7.7.1",
+    "@types/vscode": "^1.107.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
+    "npm-run-all": "^4.1.5",
+    "typescript-eslint": "^8.48.1"
+  },
+  "dependencies": {
+    "jsonc-parser": "^3.3.1",
+    "semver": "^7.7.4",
+    "typescript": "^5.9.3"
+  }
+}
