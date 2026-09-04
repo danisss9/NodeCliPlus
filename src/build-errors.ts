@@ -8,8 +8,9 @@ import {
 } from './utils';
 import type { NodeWorkspaceProject } from './types';
 import { spawnCapture } from './dependencies';
-import { parseBuildErrors, pickScriptCandidates } from './pure-utils';
+import { parseBuildErrors } from './pure-utils';
 import type { ParsedBuildError } from './pure-utils';
+import { pickScriptWithPrefs } from './script-prefs';
 import {
   sendCopilotAutoFix,
   sendCopilotAutoFixForFile,
@@ -47,7 +48,13 @@ export async function checkBuildErrors(): Promise<void> {
     return;
   }
 
-  const script = await pickBuildScript(project);
+  const script = await pickScriptWithPrefs({
+    project,
+    aliases: BUILD_SCRIPT_ALIASES,
+    title: 'Node: Check Build Errors — Select Script',
+    placeHolder: 'Select the script that builds the project',
+    commandKey: COMMAND_KEY,
+  });
   if (!script) {
     return;
   }
@@ -101,31 +108,6 @@ async function pickBuildErrorsProject(
   }
   setLastProject(COMMAND_KEY, picked);
   return projects.find((p) => p.name === picked) ?? null;
-}
-
-async function pickBuildScript(project: NodeWorkspaceProject): Promise<string | null> {
-  const scripts = project.scripts;
-  if (!scripts || Object.keys(scripts).length === 0) {
-    vscode.window.showWarningMessage(
-      `No npm scripts found in ${path.join(project.relativeDir || '.', 'package.json')}.`,
-    );
-    return null;
-  }
-
-  if (BUILD_SCRIPT_ALIASES.some((alias) => alias in scripts)) {
-    return pickScriptCandidates(scripts, BUILD_SCRIPT_ALIASES)[0]!;
-  }
-
-  const items: vscode.QuickPickItem[] = Object.entries(scripts).map(([name, cmd]) => ({
-    label: name,
-    description: cmd,
-  }));
-  const picked = await vscode.window.showQuickPick(items, {
-    placeHolder: 'Select the script that builds the project',
-    title: 'Node: Check Build Errors — Select Script',
-    matchOnDescription: true,
-  });
-  return picked ? picked.label : null;
 }
 
 // ── Build Execution ────────────────────────────────────────────────────────────

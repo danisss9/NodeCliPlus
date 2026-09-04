@@ -9,7 +9,8 @@ import {
   runInTerminal,
   pickProjectWithCurrentFile,
 } from './utils';
-import { detectBrowserLikelihood, parsePortFromScript, pickScriptCandidates, validateCustomCommand } from './pure-utils';
+import { detectBrowserLikelihood, parsePortFromScript, validateCustomCommand } from './pure-utils';
+import { pickScriptWithPrefs } from './script-prefs';
 
 // ── Timing constants ───────────────────────────────────────────────────────────
 const RESTART_DEBUG_STOP_DELAY_MS = 500;
@@ -32,35 +33,6 @@ const SERVE_SCRIPT_ALIASES = [
 ];
 
 const BUILD_WATCH_SCRIPT_ALIASES = ['build:watch', 'watch', 'build:dev', 'dev:build'];
-
-/** Picks the serve-ish script for debugging, prompting when nothing matches. */
-async function pickDebugScript(
-  project: NodeWorkspaceProject,
-  title: string,
-): Promise<string | null> {
-  const scripts = project.scripts;
-  if (!scripts || Object.keys(scripts).length === 0) {
-    vscode.window.showWarningMessage(
-      `No npm scripts found in ${path.join(project.relativeDir || '.', 'package.json')}.`,
-    );
-    return null;
-  }
-
-  if (SERVE_SCRIPT_ALIASES.some((alias) => alias in scripts)) {
-    return pickScriptCandidates(scripts, SERVE_SCRIPT_ALIASES)[0]!;
-  }
-
-  const items: vscode.QuickPickItem[] = Object.entries(scripts).map(([name, cmd]) => ({
-    label: name,
-    description: cmd,
-  }));
-  const picked = await vscode.window.showQuickPick(items, {
-    placeHolder: 'Select the script that starts your app',
-    title,
-    matchOnDescription: true,
-  });
-  return picked ? picked.label : null;
-}
 
 // ── Browser helpers ────────────────────────────────────────────────────────────
 
@@ -174,7 +146,13 @@ export async function debugNodeProject(context: vscode.ExtensionContext) {
     return;
   }
 
-  const script = await pickDebugScript(project, `Node Debug: ${project.name}`);
+  const script = await pickScriptWithPrefs({
+    project,
+    aliases: SERVE_SCRIPT_ALIASES,
+    title: `Node Debug: ${project.name}`,
+    placeHolder: 'Select the script that starts your app',
+    commandKey: 'debugServe',
+  });
   if (!script) {
     return;
   }
@@ -291,31 +269,15 @@ export async function debugBuildWatchProject(context: vscode.ExtensionContext) {
     return;
   }
 
-  const scripts = project.scripts;
-  if (!scripts || Object.keys(scripts).length === 0) {
-    vscode.window.showWarningMessage(
-      `No npm scripts found in ${path.join(project.relativeDir || '.', 'package.json')}.`,
-    );
+  const watchScript = await pickScriptWithPrefs({
+    project,
+    aliases: BUILD_WATCH_SCRIPT_ALIASES,
+    title: 'Node Debug Build Watch: Select Script',
+    placeHolder: 'Select the watch script that rebuilds on change',
+    commandKey: 'debugBuildWatch',
+  });
+  if (!watchScript) {
     return;
-  }
-
-  let watchScript: string;
-  if (BUILD_WATCH_SCRIPT_ALIASES.some((alias) => alias in scripts)) {
-    watchScript = pickScriptCandidates(scripts, BUILD_WATCH_SCRIPT_ALIASES)[0]!;
-  } else {
-    const items: vscode.QuickPickItem[] = Object.entries(scripts).map(([name, cmd]) => ({
-      label: name,
-      description: cmd,
-    }));
-    const picked = await vscode.window.showQuickPick(items, {
-      placeHolder: 'Select the watch script that rebuilds on change',
-      title: 'Node Debug Build Watch: Select Script',
-      matchOnDescription: true,
-    });
-    if (!picked) {
-      return;
-    }
-    watchScript = picked.label;
   }
 
   const vsConfig = vscode.workspace.getConfiguration('nodeCliPlus');

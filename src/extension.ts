@@ -38,6 +38,7 @@ import {
   checkDependencies,
 } from './dependencies';
 import { pickWorkspaceFolder } from './utils';
+import { resetSavedScripts } from './script-prefs';
 import { killAllManagedChildren } from './spawn';
 import { checkMemoryLeaks } from './memory-leak';
 import { setupNpmrcCommand } from './npmrc';
@@ -84,6 +85,9 @@ export function activate(context: vscode.ExtensionContext) {
       clearFinishedTerminals(),
     ),
     vscode.commands.registerCommand('node-cli-plus.runNpmScript', () => runNpmScript()),
+    vscode.commands.registerCommand('node-cli-plus.resetSavedScripts', () =>
+      resetSavedScripts(),
+    ),
     vscode.commands.registerCommand('node-cli-plus.checkMemoryLeaks', () => checkMemoryLeaks()),
     vscode.commands.registerCommand('node-cli-plus.setupNpmrc', () => setupNpmrcCommand()),
     vscode.commands.registerCommand('node-cli-plus.checkBuildErrors', () => checkBuildErrors()),

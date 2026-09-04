@@ -9,7 +9,8 @@ import {
   pickProjectWithCurrentFile,
   pickWorkspaceFolder,
 } from './utils';
-import { parseNodeFilePath, getNodeSiblingPaths, pickScriptCandidates } from './pure-utils';
+import { parseNodeFilePath, getNodeSiblingPaths } from './pure-utils';
+import { getSavedScript, pickScriptWithPrefs } from './script-prefs';
 
 // ── Script alias preferences ───────────────────────────────────────────────────
 
@@ -29,41 +30,6 @@ const BUILD_SCRIPT_ALIASES = ['build', 'compile', 'dist', 'build:prod', 'build:p
 const BUILD_WATCH_SCRIPT_ALIASES = ['build:watch', 'watch', 'build:dev', 'dev:build'];
 
 const TEST_SCRIPT_ALIASES = ['test', 'tests', 'unit', 'test:unit', 'e2e', 'integration'];
-
-/**
- * Picks the script to run: when any preferred alias exists the best match is
- * returned directly; otherwise the user is prompted with all scripts.
- */
-async function pickScript(
-  project: NodeWorkspaceProject,
-  preferred: string[],
-  title: string,
-): Promise<string | null> {
-  const scripts = project.scripts;
-  if (!scripts || Object.keys(scripts).length === 0) {
-    vscode.window.showWarningMessage(
-      `No npm scripts found in ${path.join(project.relativeDir || '.', 'package.json')}.`,
-    );
-    return null;
-  }
-
-  const hasPreferred = preferred.some((alias) => alias in scripts);
-  if (hasPreferred) {
-    return pickScriptCandidates(scripts, preferred)[0]!;
-  }
-
-  const ordered = pickScriptCandidates(scripts, preferred);
-  const items: vscode.QuickPickItem[] = ordered.map((name) => ({
-    label: name,
-    description: scripts[name],
-  }));
-  const picked = await vscode.window.showQuickPick(items, {
-    placeHolder: 'Select an npm script',
-    title,
-    matchOnDescription: true,
-  });
-  return picked ? picked.label : null;
-}
 
 // ── Source / test file switching ───────────────────────────────────────────────
 
@@ -146,7 +112,13 @@ export async function serveNodeProject() {
     return;
   }
 
-  const script = await pickScript(project, SERVE_SCRIPT_ALIASES, 'Node Serve: Select Script');
+  const script = await pickScriptWithPrefs({
+    project,
+    aliases: SERVE_SCRIPT_ALIASES,
+    title: 'Node Serve: Select Script',
+    placeHolder: 'Select an npm script',
+    commandKey: 'serve',
+  });
   if (!script) {
     return;
   }
@@ -182,29 +154,25 @@ export async function testNodeProject() {
   const config = vscode.workspace.getConfiguration('nodeCliPlus');
   const watchMode = config.get<boolean>('test.watch', false);
 
-  // Prefer a dedicated watch script when watch mode is on.
-  let script: string;
-  if (watchMode && 'test:watch' in scripts) {
+  // A saved choice always wins; otherwise prefer a dedicated watch script
+  // when watch mode is on.
+  let script: string | null;
+  const saved = getSavedScript('test', project);
+  if (saved) {
+    script = saved;
+  } else if (watchMode && 'test:watch' in scripts) {
     script = 'test:watch';
   } else {
-    const hasPreferred = TEST_SCRIPT_ALIASES.some((alias) => alias in scripts);
-    if (hasPreferred) {
-      script = pickScriptCandidates(scripts, TEST_SCRIPT_ALIASES)[0]!;
-    } else {
-      const items: vscode.QuickPickItem[] = Object.entries(scripts).map(([name, cmd]) => ({
-        label: name,
-        description: cmd,
-      }));
-      const picked = await vscode.window.showQuickPick(items, {
-        placeHolder: 'Select a test script',
-        title: 'Node Test: Select Script',
-        matchOnDescription: true,
-      });
-      if (!picked) {
-        return;
-      }
-      script = picked.label;
-    }
+    script = await pickScriptWithPrefs({
+      project,
+      aliases: TEST_SCRIPT_ALIASES,
+      title: 'Node Test: Select Script',
+      placeHolder: 'Select a test script',
+      commandKey: 'test',
+    });
+  }
+  if (!script) {
+    return;
   }
 
   // Offer to run only the current test file when the active editor is one.
@@ -270,11 +238,13 @@ async function runBuild(watch: boolean) {
     return;
   }
 
-  const script = await pickScript(
+  const script = await pickScriptWithPrefs({
     project,
-    watch ? BUILD_WATCH_SCRIPT_ALIASES : BUILD_SCRIPT_ALIASES,
-    watch ? 'Node Build Watch: Select Script' : 'Node Build: Select Script',
-  );
+    aliases: watch ? BUILD_WATCH_SCRIPT_ALIASES : BUILD_SCRIPT_ALIASES,
+    title: watch ? 'Node Build Watch: Select Script' : 'Node Build: Select Script',
+    placeHolder: 'Select an npm script',
+    commandKey: watch ? 'buildWatch' : 'build',
+  });
   if (!script) {
     return;
   }
