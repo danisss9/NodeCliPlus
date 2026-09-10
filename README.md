@@ -79,7 +79,7 @@ The Memory Leaks and Build Errors webviews show an **Auto Fix** button per issue
 | `nodeCliPlus.buildWatch.servePort` | `4173` | Static server port for debug build watch |
 | `nodeCliPlus.buildWatch.staticServerCommand` | `npx serve {outDir} -l {port}` | Static server command template |
 | `nodeCliPlus.test.watch` | `false` | Prefer watch-style test scripts |
-| `nodeCliPlus.checkDependencies.enabled` | `true` | Dependency check on startup / branch switch |
+| `nodeCliPlus.checkDependencies.enabled` | `true` | Dependency check on startup / branch switch. Automatic checks are skipped for folders containing `angular.json` when Angular CLI Plus is installed. |
 | `nodeCliPlus.checkToolVersions.enabled` | `true` | `engines` field check on startup |
 | `nodeCliPlus.npm.installCommand` | `""` | Custom install command (e.g. `pnpm install`) |
 | `nodeCliPlus.npm.cleanInstallCommand` | `""` | Custom clean-install command |

@@ -229,15 +229,28 @@ export function teardownDependencyCheck(workspaceRoot: string): void {
   invalidateProjectsCache(workspaceRoot);
 }
 
+function angularCliPlusHandlesDependencies(workspaceRoot: string): boolean {
+  return !!vscode.extensions.getExtension('danisss9.angular-cli-plus')
+    && fs.existsSync(path.join(workspaceRoot, 'angular.json'));
+}
+
 export function scheduleDependencyCheck(workspaceRoot: string, delayMs: number) {
   const existing = depCheckTimeouts.get(workspaceRoot);
   if (existing) {
     clearTimeout(existing);
+    depCheckTimeouts.delete(workspaceRoot);
+  }
+  if (angularCliPlusHandlesDependencies(workspaceRoot)) {
+    return;
   }
   depCheckTimeouts.set(
     workspaceRoot,
     setTimeout(() => {
       depCheckTimeouts.delete(workspaceRoot);
+      // Re-check in case Angular CLI Plus was installed while the timer was pending.
+      if (angularCliPlusHandlesDependencies(workspaceRoot)) {
+        return;
+      }
       checkDependencies(workspaceRoot).catch((err) =>
         logDiagnostic(`Dependency check failed: ${err}`),
       );
