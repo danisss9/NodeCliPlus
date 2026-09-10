@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { resolveWorkspaceAndProjects } from './utils';
 import { spawnCapture, spawnNpm, spawnShellCommand } from './dependencies';
+import { beginSecurityInstall, endSecurityInstall } from './security-command';
 import { npmOutput } from './state';
 import { extractJsonObject } from './pure-utils';
 import { createAnalysisPanel, escapeHtml, ANALYSIS_PANEL_CSP } from './webview-utils';
@@ -128,7 +129,10 @@ async function updatePackages(names: string[], workspaceRoot: string): Promise<v
     return;
   }
 
-  const installCode = await spawnNpm(['install'], workspaceRoot);
+  const securityRoot = await beginSecurityInstall(workspaceRoot);
+  let installCode = 1;
+  try { installCode = await spawnNpm(['install'], workspaceRoot); }
+  finally { endSecurityInstall(securityRoot, installCode === 0 ? 'success' : 'failed'); }
   if (installCode === 0) {
     vscode.window.showInformationMessage(
       `Updated ${safe.length} package${safe.length !== 1 ? 's' : ''} successfully.`,

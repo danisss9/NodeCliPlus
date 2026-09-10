@@ -1,0 +1,28 @@
+:root { color-scheme: light dark; font-family: var(--vscode-font-family, system-ui, sans-serif); color: var(--vscode-foreground, #ddd); background: var(--vscode-editor-background, #171b24); font-size: 14px; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 24px; max-width: 1440px; margin-inline: auto; }
+header, .overview, .totals, .actions, .filters { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+header, .overview { justify-content: space-between; }
+h1 { font-size: 24px; margin: 0 0 8px; } h2 { margin: 12px 0; } h3 { font-size: 14px; }
+p { line-height: 1.6; } header p { margin-top: 0; color: var(--vscode-descriptionForeground, #a9b4c7); }
+button, select, input { font: inherit; color: inherit; border: 1px solid var(--vscode-input-border, #667085); background: var(--vscode-input-background, #252d3a); border-radius: 5px; padding: 8px 12px; }
+button { cursor: pointer; } button:disabled { opacity: .5; cursor: default; }
+button:hover:not(:disabled) { background: var(--vscode-button-hoverBackground, #355783); }
+:focus-visible { outline: 2px solid var(--vscode-focusBorder, #80baff); outline-offset: 3px; }
+.overview { margin-top: 24px; padding-block: 20px; border-block: 1px solid var(--vscode-panel-border, #455065); }
+.total { min-width: 130px; display: grid; gap: 7px; } .total strong { font-size: 30px; } .total span { color: var(--vscode-descriptionForeground, #b8c4d7); }
+.notice, .coverage { padding: 16px; background: var(--vscode-textBlockQuote-background, #232d3d); border-left: 3px solid var(--vscode-textLink-foreground, #75baff); border-radius: 4px; }
+.coverage { margin-block: 20px; border-left-color: var(--vscode-descriptionForeground, #a9b4c7); }
+.coverage section { border-top: 1px solid var(--vscode-panel-border, #455065); padding-block: 4px; } .coverage ul { line-height: 1.6; overflow-wrap: anywhere; }
+.filters { align-items: end; margin-block: 24px 12px; }.filters label { display: grid; gap: 8px; } .filters label:first-child { flex: 1; min-width: 220px; }
+.state, .severity { display: inline-block; padding: 3px 8px; border-radius: 5px; font-size: 12px; font-weight: 600; text-transform: uppercase; border: 1px solid currentColor; }
+.critical, .failed { color: #ff7878; }.high, .partial { color: #f1b263; }.moderate, .cancelled { color: #e0c873; }.low, .complete, .skipped { color: var(--vscode-textLink-foreground, #80baff); }
+.finding { border: 1px solid var(--vscode-panel-border, #455065); border-radius: 8px; margin: 12px 0; overflow-wrap: anywhere; }
+.finding summary { display: flex; gap: 12px; align-items: start; padding: 16px; cursor: pointer; } .finding summary::before { content: '▸'; } .finding[open] summary::before { content: '▾'; }
+.finding-title { display: block; margin-top: 6px; }.category { margin-left: auto; font-size: 12px; color: var(--vscode-descriptionForeground, #b8c4d7); }
+.finding-body { padding: 0 20px 20px; }.evidence { padding: 10px 16px; border-left: 2px solid var(--vscode-panel-border, #455065); margin-top: 16px; }
+.evidence button { margin-left: 12px; } pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 14px; background: var(--vscode-textCodeBlock-background, #111720); border-radius: 4px; }
+a { color: var(--vscode-textLink-foreground, #80baff); } [hidden] { display: none !important; }
+@media (max-width: 650px) { body { padding: 14px; }.totals { gap: 22px; }.total { min-width: 90px; }.finding summary { flex-wrap: wrap; }.category { width: 100%; margin-left: 0; } }
+@media (prefers-color-scheme: light) { :root { color: var(--vscode-foreground, #202938); background: var(--vscode-editor-background, #fff); }.notice, .coverage { background: var(--vscode-textBlockQuote-background, #eef3fa); } button, select, input { background: var(--vscode-input-background, #fff); } pre { background: var(--vscode-textCodeBlock-background, #f3f5f8); }.critical, .failed { color: #b52222; }.high, .partial { color: #89500a; }.moderate, .cancelled { color: #71600c; }.low, .complete, .skipped, a { color: var(--vscode-textLink-foreground, #175da8); }.total span, .category, header p { color: var(--vscode-descriptionForeground, #556070); } }
+@media print { .actions, .filters, #no-matches { display: none; } body { max-width: none; } }

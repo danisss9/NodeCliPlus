@@ -3,3 +3,7 @@ dist/
 out/
 .vscode-test/
 *.vsix
+
+.graph-test-results/
+.security-test-results/
+playwright-report/

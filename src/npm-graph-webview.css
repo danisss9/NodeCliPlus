@@ -1,0 +1,53 @@
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--vscode-foreground, #ccc); background: var(--vscode-editor-background, #1e1e1e); font: 13px var(--vscode-font-family, sans-serif); height: 100vh; display: flex; flex-direction: column; }
+header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--vscode-panel-border, #444); }
+h1 { font-size: 18px; margin: 0 0 6px; }
+h2 { font-size: 16px; overflow-wrap: anywhere; }
+h3 { font-size: 13px; }
+p { line-height: 1.5; }
+#summary { margin: 0; color: var(--vscode-descriptionForeground, #999); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 6px; }
+button, input { font: inherit; border-radius: 3px; padding: 7px 10px; }
+button { cursor: pointer; color: var(--vscode-button-secondaryForeground, #fff); background: var(--vscode-button-secondaryBackground, #3a3d41); border: 1px solid var(--vscode-button-border, transparent); }
+button:hover { background: var(--vscode-button-secondaryHoverBackground, #45494e); }
+button:disabled { opacity: .5; cursor: default; }
+button[aria-pressed="true"] { color: var(--vscode-button-foreground, #fff); background: var(--vscode-button-background, #0e639c); }
+:focus-visible { outline: 2px solid var(--vscode-focusBorder, #007fd4); outline-offset: 2px; }
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; }
+.network { position: relative; min-height: 220px; overflow: hidden; }
+#graph { position: absolute; inset: 0 0 76px; }
+.legend { position: absolute; bottom: 38px; left: 16px; right: 16px; display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 11px; pointer-events: none; }
+.legend span::before { content: ''; display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 50%; background: currentColor; }
+.production { color: var(--vscode-charts-blue, #3794ff); }
+.development { color: var(--vscode-charts-purple, #b180d7); }
+.optional { color: var(--vscode-charts-green, #89d185); }
+.peer { color: var(--vscode-charts-orange, #d18616); }
+.problem { color: var(--vscode-errorForeground, #f48771); }
+.hint { position: absolute; bottom: 4px; left: 16px; color: var(--vscode-descriptionForeground, #999); font-size: 11px; pointer-events: none; }
+aside { padding: 16px; overflow: auto; border-left: 1px solid var(--vscode-panel-border, #444); background: var(--vscode-sideBar-background, #252526); }
+label { display: block; font-weight: 600; margin-bottom: 8px; }
+input { width: 100%; color: var(--vscode-input-foreground, #ccc); background: var(--vscode-input-background, #3c3c3c); border: 1px solid var(--vscode-input-border, #555); }
+#search-count { color: var(--vscode-descriptionForeground, #999); font-size: 11px; }
+#peer-notice { font-size: 12px; }
+#results { display: flex; flex-direction: column; gap: 4px; max-height: 190px; overflow: auto; padding: 3px; }
+.result { text-align: left; overflow-wrap: anywhere; flex-shrink: 0; }
+#details { margin-top: 18px; padding-top: 4px; border-top: 1px solid var(--vscode-panel-border, #444); }
+#details p, #details li { overflow-wrap: anywhere; }
+#details ul { padding-left: 18px; font-size: 12px; line-height: 1.6; }
+.package-path { color: var(--vscode-descriptionForeground, #999); font-size: 11px; }
+#diagnostics { padding: 10px 20px; border-bottom: 1px solid var(--vscode-panel-border, #444); color: var(--vscode-editorWarning-foreground, #cca700); max-height: 180px; overflow: auto; }
+#diagnostics summary { cursor: pointer; }
+#diagnostics pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+#empty { position: absolute; top: 24px; left: 20px; color: var(--vscode-descriptionForeground, #999); }
+[hidden] { display: none !important; }
+@media (max-width: 650px) {
+  main { grid-template-columns: minmax(0, 1fr) 230px; }
+  aside { padding: 12px; }
+  .legend { bottom: 36px; font-size: 10px; gap: 4px 8px; }
+  .hint { right: 10px; font-size: 10px; }
+}
+@media (max-width: 430px) {
+  main { display: flex; flex-direction: column; overflow: auto; }
+  .network { min-height: 350px; }
+  aside { overflow: visible; border-left: none; border-top: 1px solid var(--vscode-panel-border, #444); }
+}

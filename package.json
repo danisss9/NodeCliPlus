@@ -5,7 +5,7 @@
   "icon": "assets/icon.png",
   "repository": "https://github.com/danisss9/NodeCliPlus",
   "publisher": "danisss9",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.107.0"
   },
@@ -126,6 +126,17 @@
         "command": "node-cli-plus.clearTerminals",
         "title": "Close Terminals",
         "category": "Node CLI Plus"
+      },
+      {
+        "command": "node-cli-plus.reviewPackageSecurity",
+        "title": "npm: Review Package Security",
+        "category": "Node CLI Plus",
+        "enablement": "isWorkspaceTrusted"
+      },
+      {
+        "command": "node-cli-plus.showNpmDependencyGraph",
+        "title": "npm: Show Dependency Graph",
+        "category": "Node CLI Plus"
       }
     ],
     "keybindings": [
@@ -192,6 +203,17 @@
       {
         "command": "node-cli-plus.manageJsonConfig",
         "key": "ctrl+shift+n j"
+      },
+      {
+        "command": "node-cli-plus.showNpmDependencyGraph",
+        "key": "ctrl+shift+n f",
+        "mac": "cmd+shift+n f"
+      },
+      {
+        "command": "node-cli-plus.reviewPackageSecurity",
+        "key": "ctrl+shift+n v",
+        "mac": "cmd+shift+n v",
+        "when": "isWorkspaceTrusted"
       }
     ],
     "configuration": {
@@ -302,6 +324,18 @@
           "type": "boolean",
           "default": true,
           "description": "Show 'Auto Fix' buttons in the Memory Leaks and Build Errors webviews. Requires the selected AI assistant to be installed."
+        },
+        "nodeCliPlus.securityReview.afterInstall.enabled": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Review package security after Node CLI Plus installations finish, including failed attempts. Open the report when findings exist or coverage is incomplete."
+        },
+        "nodeCliPlus.securityReview.npmAudit.enabled": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Include live npm audit advisories. Sends dependency metadata to the configured npm registry. YARA-X installation-script analysis remains local."
         }
       }
     }
@@ -318,7 +352,11 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "test:graph-webview": "npm run compile-tests && npm run package && playwright test --config playwright.graph.config.cjs",
+    "test:security-engine": "npm run compile-tests && node tests/security/engine-smoke.cjs",
+    "test:security-unit": "npm run compile-tests && node --test tests/security/unit.cjs",
+    "test:security-webview": "npm run compile-tests && npm run package && playwright test --config playwright.security.config.cjs"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -330,11 +368,13 @@
     "esbuild": "^0.27.1",
     "eslint": "^9.39.1",
     "npm-run-all": "^4.1.5",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.48.1",
+    "@playwright/test": "^1.63.0"
   },
   "dependencies": {
     "jsonc-parser": "^3.3.1",
     "semver": "^7.7.4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "cytoscape": "^3.34.3"
   }
 }

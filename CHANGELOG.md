@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-09-10
+
+### Added
+
+- **npm Dependency Graph** (`Ctrl+Shift+N F`, `Cmd+Shift+N F` on macOS): interactive dependency exploration with search, recursive expansion, package details, missing peer dependency detection, and lockfile/declaration fallback views.
+- **Package Security Review** (`Ctrl+Shift+N V`, `Cmd+Shift+N V` on macOS): checks installed packages against a known-malicious-package catalog, npm audit advisories, and YARA-X rules for suspicious installation scripts.
+- **Security scan** action in the dependency graph opens a review for the selected workspace.
+- Automatic security reviews after extension-managed installs and package updates, including failed installs, with settings to disable automatic reviews or npm audit requests.
+- Security reports with category/severity filters, source evidence navigation, rescan and cancellation controls, and standalone HTML export.
+- Dependency graph and security review tests covering VS Code integration, browser interactions, large graphs, and the YARA-X engine.
+
+### Changed
+
+- Shared process execution now supports cancellation, output limits, and separate stdout/stderr capture for security scans.
+
 ## [1.0.0] - 2026-09-04
 
 Initial release.

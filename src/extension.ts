@@ -1,3 +1,5 @@
+import { showNpmDependencyGraph } from './npm-graph-command';
+import { reviewPackageSecurityCommand } from './security-command';
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -92,6 +94,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('node-cli-plus.setupNpmrc', () => setupNpmrcCommand()),
     vscode.commands.registerCommand('node-cli-plus.checkBuildErrors', () => checkBuildErrors()),
     vscode.commands.registerCommand('node-cli-plus.manageJsonConfig', () => manageJsonConfig()),
+    vscode.commands.registerCommand('node-cli-plus.showNpmDependencyGraph', () => showNpmDependencyGraph()),
+    vscode.commands.registerCommand('node-cli-plus.reviewPackageSecurity', () => reviewPackageSecurityCommand()),
     vscode.commands.registerCommand('node-cli-plus.npmInstall', () => runNpmInstall(false)),
     vscode.commands.registerCommand('node-cli-plus.npmCleanInstall', () => runNpmInstall(true)),
     vscode.commands.registerCommand('node-cli-plus.checkDependencies', async () => {

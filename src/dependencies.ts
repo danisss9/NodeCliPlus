@@ -1,3 +1,4 @@
+import { beginSecurityInstall, endSecurityInstall } from './security-command';
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -60,6 +61,13 @@ export async function runNpmInstall(clean: boolean, force = false, workspaceRoot
     workspaceRoot = workspaceFolder.uri.fsPath;
   }
 
+  const securityRoot = await beginSecurityInstall(workspaceRoot);
+  let outcome: 'success' | 'failed' | undefined;
+  try { outcome = await runNpmInstallAttempt(clean, force, workspaceRoot); }
+  finally { endSecurityInstall(securityRoot, outcome); }
+}
+
+async function runNpmInstallAttempt(clean: boolean, force: boolean, workspaceRoot: string): Promise<'success' | 'failed' | undefined> {
   npmOutput.clear();
   npmOutput.show(true);
 
@@ -82,7 +90,7 @@ export async function runNpmInstall(clean: boolean, force = false, workspaceRoot
         "Custom clean install failed. Check the 'Node CLI Plus: npm' output for details.",
       );
     }
-    return;
+    return exitCode === 0 ? 'success' : 'failed';
   }
 
   if (!clean && !force && customInstall) {
@@ -100,7 +108,7 @@ export async function runNpmInstall(clean: boolean, force = false, workspaceRoot
         "Custom install failed. Check the 'Node CLI Plus: npm' output for details.",
       );
     }
-    return;
+    return exitCode === 0 ? 'success' : 'failed';
   }
 
   if (clean) {
@@ -115,7 +123,7 @@ export async function runNpmInstall(clean: boolean, force = false, workspaceRoot
     } catch (err) {
       npmOutput.appendLine(`\nFailed to clean: ${err}`);
       vscode.window.showErrorMessage(`Failed to clean project: ${err}`);
-      return;
+      return 'failed';
     }
   }
 
@@ -124,7 +132,7 @@ export async function runNpmInstall(clean: boolean, force = false, workspaceRoot
 
   if (exitCode === 0) {
     vscode.window.showInformationMessage('npm install completed successfully.');
-    return;
+    return 'success';
   }
 
   if (!clean && !force) {
@@ -133,7 +141,7 @@ export async function runNpmInstall(clean: boolean, force = false, workspaceRoot
       'Run Clean Install',
     );
     if (action === 'Run Clean Install') {
-      await runNpmInstall(true, false, workspaceRoot);
+      return runNpmInstallAttempt(true, false, workspaceRoot);
     }
   } else if (clean && !force) {
     const action = await vscode.window.showErrorMessage(
@@ -141,13 +149,14 @@ export async function runNpmInstall(clean: boolean, force = false, workspaceRoot
       'Run with --force',
     );
     if (action === 'Run with --force') {
-      await runNpmInstall(false, true, workspaceRoot);
+      return runNpmInstallAttempt(false, true, workspaceRoot);
     }
   } else {
     vscode.window.showErrorMessage(
       'npm install --force also failed. Check the "Node CLI Plus: npm" output for details.',
     );
   }
+  return 'failed';
 }
 
 // ── Dependency checking ───────────────────────────────────────────────────────
