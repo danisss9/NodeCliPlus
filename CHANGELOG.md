@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-09-15
+
+### Changed
+
+- Automatic package security reviews after extension-managed installs are now **disabled by default**. Enable them with `nodeCliPlus.securityReview.afterInstall.enabled`; manual **npm: Review Package Security** scans are unaffected.
+
 ## [1.1.0] - 2026-09-10
 
 ### Added
@@ -26,7 +32,7 @@ Initial release.
 
 ### Added
 
-- **Project model** — the workspace root `package.json` is always a project; every [npm workspace](https://docs.npmjs.com/cli/using-npm/workspaces) package becomes one too. Project pickers offer *Current project* (detected from the active editor file) and *Last used* entries, and remember the choice per command.
+- **Project model** — the workspace root `package.json` is always a project; every [npm workspace](https://docs.npmjs.com/cli/using-npm/workspaces) package becomes one too. Project pickers offer _Current project_ (detected from the active editor file) and _Last used_ entries, and remember the choice per command.
 - **Keyboard shortcuts** — all commands bound under the `Ctrl+Shift+N` chord.
 - **Run & debug commands**
   - `Node: Debug Application` (`Ctrl+Shift+N` `D`) — smart debug: attaches the browser debugger when the project depends on a web-server framework (express, fastify, nest, vite, ...), otherwise launches the script under the VS Code Node.js debugger.

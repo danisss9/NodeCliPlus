@@ -5,7 +5,7 @@
   "icon": "assets/icon.png",
   "repository": "https://github.com/danisss9/NodeCliPlus",
   "publisher": "danisss9",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "engines": {
     "vscode": "^1.107.0"
   },
@@ -327,7 +327,7 @@
         },
         "nodeCliPlus.securityReview.afterInstall.enabled": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "scope": "resource",
           "description": "Review package security after Node CLI Plus installations finish, including failed attempts. Open the report when findings exist or coverage is incomplete."
         },
