@@ -74,3 +74,13 @@ jobs:
 
       - name: Publish VS Code extension
         run: npx @vscode/vsce publish --packagePath node-cli-plus-${{ steps.version.outputs.VERSION }}.vsix --pat ${{ secrets.MARKETPLACE_PAT }}
+
+      # ── Open VSX (https://open-vsx.org) ──────────────────────────────────
+      # Used by VSCodium, Gitpod, OpenVSCode Server, etc.
+      # Requires an OPEN_VSX_PAT secret: sign in at https://open-vsx.org with
+      # GitHub (the `danisss9` namespace matching package.json `publisher`
+      # is available automatically) and create an access token under
+      # User Settings → Personal Access Tokens.
+
+      - name: Publish to Open VSX
+        run: npx ovsx publish --packagePath node-cli-plus-${{ steps.version.outputs.VERSION }}.vsix --pat ${{ secrets.OPEN_VSX_PAT }}

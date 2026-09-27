@@ -4,6 +4,8 @@ npm script runner, debugger, and project tools for Node.js projects in VS Code �
 
 Built for plain **package.json** workspaces: the root package is a project, and every [npm workspace](https://docs.npmjs.com/cli/using-npm/workspaces) package becomes one too. Commands that need a project auto-detect it from the active file.
 
+**Install:** [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=danisss9.node-cli-plus) · [Open VSX](https://open-vsx.org/extension/danisss9/node-cli-plus) (VSCodium, GitPod, Windsurf, …)
+
 ## Keyboard shortcuts
 
 All commands are bound under the `Ctrl+Shift+N` chord. Press `Ctrl+Shift+N`, release, then press the second key.
